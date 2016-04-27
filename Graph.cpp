@@ -3,8 +3,9 @@
 Peter Strayer
 4/27/2016
 Upendra/Hoenigman
-Final Project
+This program is a continuation of Assignment 11
 */
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -14,40 +15,40 @@ Final Project
 
 using namespace std;
 
-Graph::Graph()
+Graph::Graph()  //Constructor
 {
     //ctor
 }
 
-Graph::~Graph()
+Graph::~Graph() //Destructor
 {
     //dtor
 }
 
-void Graph::readTextVERTEX(string lineData, int cot, int lineCount)
+void Graph::readTextVERTEX(string lineData, int cot, int lineCount) //Read in cities from txt file & call addVertex function
 {
         string cityData;
         istringstream ss(lineData);
-        while(getline(ss, cityData, ',')) //FILL NODE WITH VALUES
+        while(getline(ss, cityData, ',')) //FILL GRAPH WITH VALUES
         {
             if(cityData != "cities")
-                addVertex(cityData);
+                addVertex(cityData);    //Calls addVertex for the city in cityData
         }
 }
 
 
 
-void Graph::readTextEDGE(string lineData, int cot, int lineCount)
+void Graph::readTextEDGE(string lineData, int cot, int lineCount)   //Read in cities from txt file & call addEdge function
 {
         string cityData;
         int cont = 0;
         istringstream ss(lineData);
-        while(getline(ss, cityData, ',') && cont != 1) //FILL NODE WITH VALUES
+        while(getline(ss, cityData, ',') && cont != 1) //FILL GRAPH WITH EDGES
         {
             if(cityData != "-1" && cityData != "0")
             {
                 if(cot != 0)
-                    addEdge(vertices[lineCount].name, vertices[cot-1].name, atoi(cityData.c_str()));
+                    addEdge(vertices[lineCount].name, vertices[cot-1].name, atoi(cityData.c_str()));    //Calls addEdge for two vertices
             }
             else if(cityData == "0")
                 cont = 1;
@@ -62,13 +63,13 @@ void Graph::addVertex(string n)
     bool found = false;
     for(int i = 0; i < vertices.size(); i++)
     {
-        if(vertices[i].name == n)
+        if(vertices[i].name == n)   //If vertex already exists print found
         {
             found = true;
             cout<<vertices[i].name<<" found."<<endl;
         }
     }
-    if(found == false)
+    if(found == false)  //If vertex does not yet exist then assign values & add to vector
     {
         vertex v;
         v.name = n;
@@ -76,17 +77,16 @@ void Graph::addVertex(string n)
         v.district = -1;
         v.parent = NULL;
         vertices.push_back(v);
-        //cout<<"addVertex added "<<v.name<<" and vertices size is "<<vertices.size()<<endl;
     }
 }
 
 
-void Graph::addEdge(string v1, string v2, int weight)
+void Graph::addEdge(string v1, string v2, int weight)   //Function to traverse all vertices and add edges to the correct pairs
 {
     //cout<<"in addEdge and vertices size is "<<vertices.size()<<endl;
-    for(int i = 0; i < vertices.size(); i++)
+    for(int i = 0; i < vertices.size(); i++)    //For loop to traverse vertices
     {
-        if(vertices[i].name == v1)
+        if(vertices[i].name == v1)  //If vertex at index is equal
         {
             //cout<<"vertices name at i= "<<i<<" equals v1 "<<v1<<endl;
             for(int j = 0; j < vertices.size(); j++)
@@ -413,19 +413,19 @@ void Graph::shortestDistanceFloydWarshall()
              {
              for(int m = 0; m < vertices.size(); m++)
              {
-                 cout<<vertices[j].cityVector[i].distance2<<" distance through i "<<endl;
+                // cout<<vertices[j].cityVector[i].distance2<<" distance through i "<<endl;
                  if ((vertices[j].cityVector[m].distance2 > (vertices[j].cityVector[i].distance2 + vertices[i].cityVector[m].distance2))&&\
                     ((vertices[j].cityVector[i].distance2 + vertices[i].cityVector[m].distance2) < 2*10000000))
                  {
-                    cout<<"distance before update = "<<vertices[j].cityVector[m].distance2<<" i,j,m = "<<i<<" , "<<j<<" , "<<m<<endl;
-                    cout<<vertices[j].cityVector[m].cityName<<" , "<<vertices[j].cityVector[m].distance2<<endl;
-                    cout<<vertices[j].cityVector[i].cityName<<" , "<<vertices[j].cityVector[i].distance2<<endl;
-                    cout<<vertices[i].cityVector[m].cityName<<" , "<<vertices[i].cityVector[m].distance2<<endl;
+                   // cout<<"distance before update = "<<vertices[j].cityVector[m].distance2<<" i,j,m = "<<i<<" , "<<j<<" , "<<m<<endl;
+                   // cout<<vertices[j].cityVector[m].cityName<<" , "<<vertices[j].cityVector[m].distance2<<endl;
+                   // cout<<vertices[j].cityVector[i].cityName<<" , "<<vertices[j].cityVector[i].distance2<<endl;
+                   // cout<<vertices[i].cityVector[m].cityName<<" , "<<vertices[i].cityVector[m].distance2<<endl;
                     vertices[j].cityVector[m].distance2 = vertices[j].cityVector[i].distance2 + vertices[i].cityVector[m].distance2 ;
                     vertices[m].cityVector[j].distance2 = vertices[j].cityVector[m].distance2;
                     vertices[j].cityVector[m].lastEdgeIndexi = i;
                     vertices[j].cityVector[m].lastEdgeIndexj = m;
-                    cout<<"distance after update = "<<vertices[j].cityVector[m].distance2<<endl;
+                   // cout<<"distance after update = "<<vertices[j].cityVector[m].distance2<<endl;
                  }
              }
              }
@@ -434,8 +434,12 @@ void Graph::shortestDistanceFloydWarshall()
      //print results
      for(int i = 0; i < vertices.size(); i++)
      {
-         cout<<"Shortest distances from "<<vertices[i].name<<" to:"<<endl;
+
          for(int j = 0; j < vertices.size(); j++)
-           cout<<vertices[i].cityVector[j].cityName<<" : "<<vertices[i].cityVector[j].distance2<<endl;
+         {
+            cout<<vertices[i].name<<" to ";
+            cout<<vertices[i].cityVector[j].cityName<<": "<<vertices[i].cityVector[j].distance2<<endl;
+
+         }
      }
 }
