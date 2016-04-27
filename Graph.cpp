@@ -4,6 +4,7 @@ Peter Strayer
 Upendra/Hoenigman
 This program is a continuation of Assignment 11
 */
+
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -234,12 +235,12 @@ void Graph::shortestPath(string startingCity,string endingCity) //BFS to determi
 
 }
 
-void Graph::shortestDistanceDykstra(string startingCity,string endingCity)  //
+void Graph::shortestDistanceDykstra(string startingCity,string endingCity)  //Shortest distance algorithm from Dykstra
 {
     bool check1 = false, check2 = false, done = false;
     int posCount1 = 0, posCount2 = 0, bestDistance = 100000, m = 0;
     queueVertex qv;
-    for(int i = 0; i < vertices.size(); i++)
+    for(int i = 0; i < vertices.size(); i++)    //Checks each city to see if it exists in the vector
     {
         if(vertices[i].name == startingCity)
         {
@@ -256,80 +257,58 @@ void Graph::shortestDistanceDykstra(string startingCity,string endingCity)  //
         {
             if(vertices[posCount1].district > 0 || vertices[posCount2].district > 0)
             {
-                if(vertices[posCount1].district == vertices[posCount2].district)
+                if(vertices[posCount1].district == vertices[posCount2].district)    //Testing to see if in same district
                 {
+                    //Setting up city pointer and pushing onto vector path
                     vertices[posCount1].visited = true;
-                    //cout<<vertices[posCount1].name<<" was visited"<<endl;
                     vertex *vptr = &vertices[posCount1];
-                    //cout<<"after vertex *vptr = line"<<endl;
                     qv.path.push_back(vptr);
-                    //cout<<"after push_back line"<<endl;
+
+                    //Declaring variables to count with & setting parent to NULL
                     int k = 0, target = -1, pathPosition = 0;
                     vertices[posCount1].parent = NULL;
-                    //cout<<"about to enter the while loop"<<endl;
-                    while(done == false)
+                    while(done == false)    //While loop until done equals true
                     {
-                        //target = -1;
                         bestDistance = 100000;
                         target = -1;  //upon looping through reset this
-                        //cout<<"target set to "<<target<<" and m = "<<m<<endl;
-                        //cout<<"for loop will end at "<<qv.path[m]->adj.size()<<endl;
                         for(int j = 0; j < qv.path[m]->adj.size(); j++)
                         {
-                            //cout<<"entered for loop with the j index"<<endl;
-                            if((qv.path[m]->adj[j].v->visited == false) && ((qv.path[m]->distance + qv.path[m]->adj[j].weight) < bestDistance))
+                            if((qv.path[m]->adj[j].v->visited == false) && ((qv.path[m]->distance + qv.path[m]->adj[j].weight) < bestDistance)) //If not visited and shortest path
                             {
-                                //cout<<"entered inner if statement with visited == false && sum < bestDistance"<<endl;
                                 bestDistance = qv.path[m]->distance + qv.path[m]->adj[j].weight;
                                 target = j;
                                 pathPosition = m;
                             }
-                            //cout<<"after if statement and target = "<<target<<" and bestDistance = "<<bestDistance<<endl;
-
                         }
-                        if((bestDistance > 0)&& (target != -1) && (m = qv.path.size())) //changed this so best distance is measured after all
-                                                                   //not visited nodes next to path nodes are checked
+                        if((bestDistance > 0)&& (target != -1) && (m = qv.path.size())) //changed this so best distance is measured after all//not visited nodes next to path nodes are checked
                         {
-                           // cout<<"entered if statement if bestDistance > 0"<<endl;
+                            //finding vptr and implementing it into the path
                             vptr = qv.path[pathPosition]->adj[target].v;
-                           // cout<<"after vptr = line"<<endl;
                             vptr->parent = qv.path[pathPosition];
-                          //  cout<<"after vptr->parent = line"<<endl;
                             vptr->visited = true;
-                           // cout<<"visited "<<vptr->name<<endl;
                             vptr->distance = bestDistance;
-                            //cout<<"set distance to bestDistance"<<endl;
-                            if(vptr->name == endingCity)
-                            {
-                               // cout<<"done is set to true"<<endl;
-                                done = true;
-                            }
-                                //done = true;
 
-                            qv.path.push_back(vptr);
-                            //cout<<"after push_back at the end of the if bestDistance > 0"<<endl;
+                            //If statement to check when finished
+                            if(vptr->name == endingCity)
+                                done = true;
+
+                            qv.path.push_back(vptr);    //Push the city back
                             m = 0;
                         }
-                         //if (m = qv.path.size())
-                            //m = 0;
-                         //else m++;
-                         else if (m < qv.path.size())
+                         else if(m < qv.path.size())
                             m++;
                     }
-                    //cout<<"ready to retrace the path"<<endl;
+
+                    //Sets pointer to last index in path and loops while parent is not assigned
                     vptr = qv.path[qv.path.size() - 1];
                     while(vptr->parent != NULL)
                     {
-                        //cout<<"entered while until parent is NULL"<<endl;
                         correctPath.push_back(vptr);
                         vptr = vptr->parent;
                         k++;
-                        //cout<<"k was updated to "<<k<<endl;
                     }
                     correctPath.push_back(vptr);
-                    //k++;  this was already updated before the while loop stopped
 
-                    //cout<<"ready to print the path"<<endl;
                     cout << bestDistance;
                     int p;
                     for( p = correctPath.size() -1; p >= 0; p--)
@@ -358,17 +337,18 @@ void Graph::shortestDistanceDykstra(string startingCity,string endingCity)  //
 }
 
 
-void Graph::shortestDistanceFloydWarshall()
+void Graph::shortestDistanceFloydWarshall() //Uses shortest distance algorithm made by Floyd Warshall
 {
     cityVectorItem tmpCity;
-    for(int i = 0; i < vertices.size(); i++)
+    for(int i = 0; i < vertices.size(); i++)    //Set up new cities and increment the size by changing the lastEdgeIndexi
     {
         tmpCity.cityName = vertices[i].name;
-        tmpCity.distance2 = 10000000; //instead, set to infinity
+        tmpCity.distance2 = 10000000; //ideally set to infinity but an arbitrarily large number will work with the data
         tmpCity.lastEdgeIndexi = i;
         for(int j=0; j < vertices.size(); j++)
         {
-            if (i==j)tmpCity.distance2 = 0;
+            if(i==j)    //If same city then distance = 0
+                tmpCity.distance2 = 0;
             tmpCity.lastEdgeIndexj = j;
             vertices[j].cityVector.push_back(tmpCity); //initialize the city vectors in each graph node
         }                                               //it will store shortest distances to each other node
@@ -379,10 +359,8 @@ void Graph::shortestDistanceFloydWarshall()
          {
              for(int k=0; k < vertices[i].adj.size(); k++)
              {
-                 if (vertices[i].adj[k].v->name == vertices[i].cityVector[j].cityName)
-                 {
-                    vertices[i].cityVector[j].distance2 = vertices[i].adj[k].weight;
-                 }
+                 if(vertices[i].adj[k].v->name == vertices[i].cityVector[j].cityName)
+                    vertices[i].cityVector[j].distance2 = vertices[i].adj[k].weight; //Set distances by using the weight values for Dykstra's algorithm
              }
          }
      }
@@ -392,25 +370,18 @@ void Graph::shortestDistanceFloydWarshall()
          for(int j = 0; j < vertices.size(); j++)
          {
             if ( i != j)
-             {
-             for(int m = 0; m < vertices.size(); m++)
-             {
-                // cout<<vertices[j].cityVector[i].distance2<<" distance through i "<<endl;
-                 if ((vertices[j].cityVector[m].distance2 > (vertices[j].cityVector[i].distance2 + vertices[i].cityVector[m].distance2))&&\
-                    ((vertices[j].cityVector[i].distance2 + vertices[i].cityVector[m].distance2) < 2*10000000))
-                 {
-                   // cout<<"distance before update = "<<vertices[j].cityVector[m].distance2<<" i,j,m = "<<i<<" , "<<j<<" , "<<m<<endl;
-                   // cout<<vertices[j].cityVector[m].cityName<<" , "<<vertices[j].cityVector[m].distance2<<endl;
-                   // cout<<vertices[j].cityVector[i].cityName<<" , "<<vertices[j].cityVector[i].distance2<<endl;
-                   // cout<<vertices[i].cityVector[m].cityName<<" , "<<vertices[i].cityVector[m].distance2<<endl;
-                    vertices[j].cityVector[m].distance2 = vertices[j].cityVector[i].distance2 + vertices[i].cityVector[m].distance2 ;
-                    vertices[m].cityVector[j].distance2 = vertices[j].cityVector[m].distance2;
-                    vertices[j].cityVector[m].lastEdgeIndexi = i;
-                    vertices[j].cityVector[m].lastEdgeIndexj = m;
-                   // cout<<"distance after update = "<<vertices[j].cityVector[m].distance2<<endl;
-                 }
-             }
-             }
+            {
+                for(int m = 0; m < vertices.size(); m++)
+                {
+                    if ((vertices[j].cityVector[m].distance2 > (vertices[j].cityVector[i].distance2 + vertices[i].cityVector[m].distance2))&&((vertices[j].cityVector[i].distance2 + vertices[i].cityVector[m].distance2) < 2*10000000))
+                     {
+                        vertices[j].cityVector[m].distance2 = vertices[j].cityVector[i].distance2 + vertices[i].cityVector[m].distance2 ;
+                        vertices[m].cityVector[j].distance2 = vertices[j].cityVector[m].distance2;
+                        vertices[j].cityVector[m].lastEdgeIndexi = i;
+                        vertices[j].cityVector[m].lastEdgeIndexj = m;
+                     }
+                }
+            }
          }
      }
      //print results

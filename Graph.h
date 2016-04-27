@@ -52,16 +52,11 @@ class Graph
         void addVertex(std::string n);
         void displayEdges();
         void assignDistricts();
-        //void BFTraversalLabel(std::string startingCity, int distID);
         void shortestPath(std::string startingCity,std::string endingCity);
         void shortestDistanceDykstra(std::string startingCity,std::string endingCity);
-        //void shortestDistanceBellmanFord(std::string startingCity,std::string endingCity);
         void shortestDistanceFloydWarshall();
         void readTextEDGE(std::string lineData, int cot, int lineCount);
-        //void readTextEDGE2(std::string lineData2, int cot, int lineCount);
         void readTextVERTEX(std::string lineData, int cot, int lineCount);
-        //void readTextVERTEX2(std::string lineData2, int cot, int lineCount);
-
         vertex * findVertex(std::string name);
 
     protected:
@@ -69,10 +64,6 @@ class Graph
         std::vector<vertex> vertices;
         std::vector<vertex *> correctPath;
         std::vector<vertex> tripvertices;
-       // std::vector<vertex *> correctTrip;
-        //int bestDistance = 10000000000; int tripDistance = 0;
-        //std::vector<std::string> tmpItinerary;
-        //std::vector<std::string> itinerary;
 };
 
 #endif // GRAPH_H
