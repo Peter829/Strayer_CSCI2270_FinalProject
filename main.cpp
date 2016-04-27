@@ -61,6 +61,7 @@ int main(int argc, char* argv[])
             graphM.assignDistricts();
        if(num == 3)    //FIND SHORTEST PATH BETWEEN ANY TWO CITIES USING BFS
         {
+            cout << "Don't forget to identify districts before using BFS algorithm" << endl;
             string city, city2;
             cout << "Enter a starting city:" << endl;
             getline(cin, city);
@@ -70,6 +71,7 @@ int main(int argc, char* argv[])
         }
         if (num == 4)  //FIND SHORTEST PATH BETWEEN ANY TWO CITIES USING DYKSTRA
         {
+            cout << "Don't forget to identify districts before using Dykstra's algorithm" << endl;
             string city, city2;
             cout << "Enter a starting city:" << endl;
             getline(cin, city);

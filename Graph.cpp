@@ -1,11 +1,9 @@
-
 /*
 Peter Strayer
 4/27/2016
 Upendra/Hoenigman
 This program is a continuation of Assignment 11
 */
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -48,7 +46,7 @@ void Graph::readTextEDGE(string lineData, int cot, int lineCount)   //Read in ci
             if(cityData != "-1" && cityData != "0")
             {
                 if(cot != 0)
-                    addEdge(vertices[lineCount].name, vertices[cot-1].name, atoi(cityData.c_str()));    //Calls addEdge for two vertices
+addEdge(vertices[lineCount].name, vertices[cot-1].name, atoi(cityData.c_str()));    //Calls addEdge for two vertices and the weight of the edge
             }
             else if(cityData == "0")
                 cont = 1;
@@ -69,7 +67,8 @@ void Graph::addVertex(string n)
             cout<<vertices[i].name<<" found."<<endl;
         }
     }
-    if(found == false)  //If vertex does not yet exist then assign values & add to vector
+    if(found == false)  //If vertex does not yet exist then assign name, initial & add to vector
+
     {
         vertex v;
         v.name = n;
@@ -83,30 +82,23 @@ void Graph::addVertex(string n)
 
 void Graph::addEdge(string v1, string v2, int weight)   //Function to traverse all vertices and add edges to the correct pairs
 {
-    //cout<<"in addEdge and vertices size is "<<vertices.size()<<endl;
     for(int i = 0; i < vertices.size(); i++)    //For loop to traverse vertices
     {
-        if(vertices[i].name == v1)  //If vertex at index is equal
+        if(vertices[i].name == v1)              //Identify all edges from vertex v1
         {
-            //cout<<"vertices name at i= "<<i<<" equals v1 "<<v1<<endl;
-            for(int j = 0; j < vertices.size(); j++)
+            for(int j = 0; j < vertices.size(); j++)    //Loop to keep track of ending city
             {
-                //cout<<"for j= "<<j<<"vertices name at j is "<<vertices[j].name<<" and v2 is "<<v2<<endl;
-                if(vertices[j].name == v2 && i != j)
+                if(vertices[j].name == v2 && i != j)    //If ending city is equal to v2 and is not starting city
                 {
-                    //cout<<"add an edge"<<endl;
-                    adjVertex av;
-                    av.v = &vertices[j];
-                    av.weight = weight;
-                    vertices[i].adj.push_back(av);
-                    //cout<<"for "<<vertices[i].name<<" we added an edge to "<<vertices[i].adj[vertices[i].adj.size()-1].v->name<<endl;
-                    //and the other way around
-                    adjVertex av2;
+                    adjVertex av;   //Create instance of adjVertex
+                    av.v = &vertices[j];    //set ending city pointer to adjVertex pointer value
+                    av.weight = weight;     //set ending city weight
+                    vertices[i].adj.push_back(av);  //push ending city back on starting city's adj list
+
+                    adjVertex av2;  //Create new instance of adjVertex for linking the cities together through the adjacent city's struct
                     av2.v = &vertices[i];
                     av2.weight = weight;
                     vertices[j].adj.push_back(av2);
-                    //cout<<"for "<<vertices[j].name<<" we added an edge to "<<vertices[j].adj[vertices[j].adj.size()-1].v->name<<endl;
-
                 }
             }
         }
@@ -114,13 +106,12 @@ void Graph::addEdge(string v1, string v2, int weight)   //Function to traverse a
 }
 
 
-void Graph::displayEdges()
+void Graph::displayEdges()  //Display all edges of the graph
 {
     for(int i = 0; i < vertices.size(); i++)
     {
         for(int j = 0; j < vertices[i].adj.size(); j++)
         {
-           // cout<<"edge has weight: "<<vertices[i].adj[j].weight<<endl;
             cout<<vertices[i].adj[j].v->name<<"***";
         }
         cout<<endl;
@@ -128,100 +119,92 @@ void Graph::displayEdges()
 }
 
 
-void Graph::assignDistricts()
+void Graph::assignDistricts()   //Assign districts to all vertices
 {
     int districtCounter = 1;
     for(int i = 0; i < vertices.size(); i++)
     {
-       // cout << vertices[i].district << endl;
-
-        if(vertices[i].district < 0)
+        if(vertices[i].district < 0)    //If districts have not been assigned
         {
-            vertices[i].district = districtCounter;
-           // cout << vertices[i].district << endl;
+            vertices[i].district = districtCounter; //Set vertex district equal to 1
+
             for(int j = 0; j < vertices[i].adj.size(); j++)
             {
-                vertices[i].adj[j].v->district = districtCounter;
-                //cout << vertices[i].adj[j].v->district << endl;
-                //cout <<  vertices[i].adj[j].v->name << " " <<  vertices[i].adj[j].v->adj.size() << endl;
-               for(int k = 0; k < vertices[i].adj[j].v->adj.size(); k++)
-               {
+                vertices[i].adj[j].v->district = districtCounter;   //Assign the same district value to all adj cities
+                for(int k = 0; k < vertices[i].adj[j].v->adj.size(); k++)
+                {
                    if(vertices[i].adj[j].v->adj[k].v->district < 0)
-                      vertices[i].adj[j].v->adj[k].v->district = districtCounter;
-               }
+                      vertices[i].adj[j].v->adj[k].v->district = districtCounter;   //Assign the same district value to all adj city's adj cities
+                }
             }
-            districtCounter++;
+            districtCounter++;  //Increment district counter to move on to the next one
         }
     }
 }
 
-void Graph::shortestPath(string startingCity,string endingCity)
+void Graph::shortestPath(string startingCity,string endingCity) //BFS to determine shortest path(smallest number of edges) between two vertices
 {
-    bool check1 = false, check2 = false, done = false;
-    int posCount1 = 0, posCount2 = 0,  m = 0;
-    queueVertex qv;
-    for(int i = 0; i < vertices.size(); i++)
-    {
-        if(vertices[i].name == startingCity)
+        bool check1 = false, check2 = false, done = false;  //Various booleans to check districts and end loop
+        int posCount1 = 0, posCount2 = 0,  m = 0;   //Various integers to determine the index of starting city
+        queueVertex qv; //Create instance of queueVertex
+
+        for(int i = 0; i < vertices.size(); i++)    //Loop through vertices
         {
-            check1 = true;
-            posCount1 = i;
-        }
-        if(vertices[i].name == endingCity)
-        {
-            check2 = true;
-            posCount2 = i;
-        }
-    }
-        if(check1 == true && check2 == true)
-        {
-            if(vertices[posCount1].district > 0 || vertices[posCount2].district > 0)
+            if(vertices[i].name == startingCity)    //Find each city in vertices vector
             {
-                if(vertices[posCount1].district == vertices[posCount2].district)
+                check1 = true;
+                posCount1 = i;
+            }
+            if(vertices[i].name == endingCity)  //Find each city in vertices vector
+            {
+                check2 = true;
+                posCount2 = i;
+            }
+        }
+
+        if(check1 == true && check2 == true)    //Both cities exist in graph
+        {
+            if(vertices[posCount1].district > 0 || vertices[posCount2].district > 0)    //Either city has district assigned
+            {
+                if(vertices[posCount1].district == vertices[posCount2].district)        //Both cities are in same district
                 {
-                    vertices[posCount1].visited = true;
-                    //cout<<vertices[posCount1].name<<" was visited"<<endl;
-                    vertex *vptr = &vertices[posCount1];
-                    //cout<<"after vertex *vptr = line"<<endl;
-                    qv.path.push_back(vptr);
-                    //cout<<"after push_back line"<<endl;
-                    int k = 0, target = -1, pathPosition = 0;
-                    vertices[posCount1].parent = NULL;
-                    //cout<<"about to enter the while loop"<<endl;
-                    while(done == false)
+                    vertices[posCount1].visited = true;     //Set visited value of city to true
+                    vertex *vptr = &vertices[posCount1];    //Set pointer
+
+                    qv.path.push_back(vptr);                //Push shortest path vertex back on to the path vector
+                    int k = 0, target = -1, pathPosition = 0;   //Various integers to count
+
+                    vertices[posCount1].parent = NULL;      //Set city's parent to NULL
+                    while(done == false)    //Loop until done equals true
                     {
                         for(int j = 0; j < qv.path[m]->adj.size(); j++)
                         {
                             if((qv.path[m]->adj[j].v->visited == false)&&(done!=true))
                             {
-                                //cout<<"entered inner if statement with visited == false && sum < bestDistance"<<endl;
-                                qv.path[m]->adj[j].v->distance = qv.path[m]->distance + 1;
-                                qv.path[m]->adj[j].v->parent = qv.path[m];
-                                //pathPosition = m;
+                                qv.path[m]->adj[j].v->distance = qv.path[m]->distance + 1;  //Increment distance counter
+                                qv.path[m]->adj[j].v->parent = qv.path[m];  //Set adjacent cities parent to the vertex city
                                 vptr = qv.path[m]->adj[j].v;
 
-                                vptr->visited = true;
+                                vptr->visited = true;   //Set pointer city to visited
 
-                                 if(vptr->name == endingCity)
-                                 {
-                               // cout<<"done is set to true"<<endl;
-                                     done = true;
-                                 }
-                                  qv.path.push_back(vptr);
+                                if(vptr->name == endingCity)
+                                    done = true;
+                                qv.path.push_back(vptr);
                              }
 
-                             else if ((qv
-                                       .path[m]->adj[j].v->visited == true) && (m < qv.path.size()))
-                                  m++;
+                            else if((qv.path[m]->adj[j].v->visited == true) && (m < qv.path.size()))
+                                m++;
                         }
                     }
+
                     vptr = qv.path[qv.path.size() - 1];
-                    while(vptr->parent != NULL)
+                    while(vptr->parent != NULL) //Loop until city's parent is found
                     {
                         correctPath.push_back(vptr);
                         vptr = vptr->parent;
                         k++;
                     }
+
                     correctPath.push_back(vptr);
                     cout << k;
                     int p;
@@ -251,7 +234,7 @@ void Graph::shortestPath(string startingCity,string endingCity)
 
 }
 
-void Graph::shortestDistanceDykstra(string startingCity,string endingCity)
+void Graph::shortestDistanceDykstra(string startingCity,string endingCity)  //
 {
     bool check1 = false, check2 = false, done = false;
     int posCount1 = 0, posCount2 = 0, bestDistance = 100000, m = 0;
@@ -371,7 +354,6 @@ void Graph::shortestDistanceDykstra(string startingCity,string endingCity)
         }
         else
             cout << "One or more cities doesn't exist" << endl;
-    //}
 
 }
 
@@ -443,3 +425,5 @@ void Graph::shortestDistanceFloydWarshall()
          }
      }
 }
+
+
