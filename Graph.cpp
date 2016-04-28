@@ -181,73 +181,77 @@ void Graph::shortestPath(string startingCity,string endingCity) //BFS to determi
 
         if(check1 == true && check2 == true)    //Both cities exist in graph
         {
-            if(vertices[posCount1].district > 0 || vertices[posCount2].district > 0)    //Either city has district assigned
+            if(endingCity != startingCity)
             {
-                if(vertices[posCount1].district == vertices[posCount2].district)        //Both cities are in same district
+                if(vertices[posCount1].district > 0 || vertices[posCount2].district > 0)    //Either city has district assigned
                 {
-                    vertices[posCount1].visited = true;     //Set visited value of city to true
-                    vertex *vptr = &vertices[posCount1];    //Set pointer
-
-                    qv.path.push_back(vptr);                //Push shortest path vertex back on to the path vector
-                    int k = 0, target = -1, pathPosition = 0;   //Various integers to count
-
-                    vertices[posCount1].parent = NULL;      //Set city's parent to NULL
-                    while(done == false)    //Loop until done equals true
+                    if(vertices[posCount1].district == vertices[posCount2].district)        //Both cities are in same district
                     {
-                        for(int j = 0; j < qv.path[m]->adj.size(); j++)
+                        vertices[posCount1].visited = true;     //Set visited value of city to true
+                        vertex *vptr = &vertices[posCount1];    //Set pointer
+
+                        qv.path.push_back(vptr);                //Push shortest path vertex back on to the path vector
+                        int k = 0, target = -1, pathPosition = 0;   //Various integers to count
+
+                        vertices[posCount1].parent = NULL;      //Set city's parent to NULL
+                        while(done == false)    //Loop until done equals true
                         {
-                            if((qv.path[m]->adj[j].v->visited == false)&&(done!=true))
+                            for(int j = 0; j < qv.path[m]->adj.size(); j++)
                             {
-                                qv.path[m]->adj[j].v->distance = qv.path[m]->distance + 1;  //Increment distance counter
-                                qv.path[m]->adj[j].v->parent = qv.path[m];  //Set adjacent cities parent to the vertex city
-                                vptr = qv.path[m]->adj[j].v;
+                                if((qv.path[m]->adj[j].v->visited == false)&&(done!=true))
+                                {
+                                    qv.path[m]->adj[j].v->distance = qv.path[m]->distance + 1;  //Increment distance counter
+                                    qv.path[m]->adj[j].v->parent = qv.path[m];  //Set adjacent cities parent to the vertex city
+                                    vptr = qv.path[m]->adj[j].v;
 
-                                vptr->visited = true;   //Set pointer city to visited
+                                    vptr->visited = true;   //Set pointer city to visited
 
-                                if(vptr->name == endingCity)
-                                    done = true;
-                                qv.path.push_back(vptr);
-                             }
+                                    if(vptr->name == endingCity)
+                                        done = true;
+                                    qv.path.push_back(vptr);
+                                 }
 
-                            else if((qv.path[m]->adj[j].v->visited == true) && (m < qv.path.size()))
-                                m++;
+                                else if((qv.path[m]->adj[j].v->visited == true) && (m < qv.path.size()))
+                                    m++;
+                            }
                         }
-                    }
 
-                    vptr = qv.path[qv.path.size() - 1];
-                    while(vptr->parent != NULL) //Loop until city's parent is found
-                    {
+                        vptr = qv.path[qv.path.size() - 1];
+                        while(vptr->parent != NULL) //Loop until city's parent is found
+                        {
+                            correctPath.push_back(vptr);
+                            vptr = vptr->parent;
+                            k++;
+                        }
+
                         correctPath.push_back(vptr);
-                        vptr = vptr->parent;
-                        k++;
+                        cout << k;
+                        int p;
+                        for( p = correctPath.size() -1; p >= 0; p--)
+                        {
+                            cout << "," << correctPath[p]->name;
+                        }
+                        cout << endl;
+                        correctPath.clear();
+                        for(int i = 0; i < vertices.size(); i++)
+                        {
+                            vertices[i].distance = 0;
+                            vertices[i].visited = false;
+                        }
+                        //RESET correctPath - otherwise the previous results print as well
                     }
-
-                    correctPath.push_back(vptr);
-                    cout << k;
-                    int p;
-                    for( p = correctPath.size() -1; p >= 0; p--)
-                    {
-                        cout << "," << correctPath[p]->name;
-                    }
-                    cout << endl;
-                    correctPath.clear();
-                    for(int i = 0; i < vertices.size(); i++)
-                    {
-                        vertices[i].distance = 0;
-                        vertices[i].visited = false;
-                    }
-                    //RESET correctPath - otherwise the previous results print as well
+                    else
+                        cout << "No safe path between cities" << endl;
                 }
                 else
-                    cout << "No safe path between cities" << endl;
+                    cout << "Please identify the districts before checking the distances" << endl;
             }
             else
-                cout << "Please identify the districts before checking the distances" << endl;
-
+                cout << "Distance from city to itself is always 0" << endl;
         }
         else
             cout << "One or more cities doesn't exist" << endl;
-    //}
+
 
 }
 
@@ -271,80 +275,85 @@ void Graph::shortestDistanceDykstra(string startingCity,string endingCity)  //Sh
     }
         if(check1 == true && check2 == true)
         {
-            if(vertices[posCount1].district > 0 || vertices[posCount2].district > 0)
+            if(endingCity != startingCity)
             {
-                if(vertices[posCount1].district == vertices[posCount2].district)    //Testing to see if in same district
+                if(vertices[posCount1].district > 0 || vertices[posCount2].district > 0)
                 {
-                    //Setting up city pointer and pushing onto vector path
-                    vertices[posCount1].visited = true;
-                    vertex *vptr = &vertices[posCount1];
-                    qv.path.push_back(vptr);
-
-                    //Declaring variables to count with & setting parent to NULL
-                    int k = 0, target = -1, pathPosition = 0;
-                    vertices[posCount1].parent = NULL;
-                    while(done == false)    //While loop until done equals true
+                    if(vertices[posCount1].district == vertices[posCount2].district)    //Testing to see if in same district
                     {
-                        bestDistance = 100000;
-                        target = -1;  //upon looping through reset this
-                        for(int j = 0; j < qv.path[m]->adj.size(); j++)
+                        //Setting up city pointer and pushing onto vector path
+                        vertices[posCount1].visited = true;
+                        vertex *vptr = &vertices[posCount1];
+                        qv.path.push_back(vptr);
+
+                        //Declaring variables to count with & setting parent to NULL
+                        int k = 0, target = -1, pathPosition = 0;
+                        vertices[posCount1].parent = NULL;
+                        while(done == false)    //While loop until done equals true
                         {
-                            if((qv.path[m]->adj[j].v->visited == false) && ((qv.path[m]->distance + qv.path[m]->adj[j].weight) < bestDistance)) //If not visited and shortest path
+                            bestDistance = 100000;
+                            target = -1;  //upon looping through reset this
+                            for(int j = 0; j < qv.path[m]->adj.size(); j++)
                             {
-                                bestDistance = qv.path[m]->distance + qv.path[m]->adj[j].weight;
-                                target = j;
-                                pathPosition = m;
+                                if((qv.path[m]->adj[j].v->visited == false) && ((qv.path[m]->distance + qv.path[m]->adj[j].weight) < bestDistance)) //If not visited and shortest path
+                                {
+                                    bestDistance = qv.path[m]->distance + qv.path[m]->adj[j].weight;
+                                    target = j;
+                                    pathPosition = m;
+                                }
                             }
+                            if((bestDistance > 0)&& (target != -1) && (m = qv.path.size())) //changed this so best distance is measured after all//not visited nodes next to path nodes are checked
+                            {
+                                //finding vptr and implementing it into the path
+                                vptr = qv.path[pathPosition]->adj[target].v;
+                                vptr->parent = qv.path[pathPosition];
+                                vptr->visited = true;
+                                vptr->distance = bestDistance;
+
+                                //If statement to check when finished
+                                if(vptr->name == endingCity)
+                                    done = true;
+
+                                qv.path.push_back(vptr);    //Push the city back
+                                m = 0;
+                            }
+                             else if(m < qv.path.size())
+                                m++;
                         }
-                        if((bestDistance > 0)&& (target != -1) && (m = qv.path.size())) //changed this so best distance is measured after all//not visited nodes next to path nodes are checked
+
+                        //Sets pointer to last index in path and loops while parent is not assigned
+                        vptr = qv.path[qv.path.size() - 1];
+                        while(vptr->parent != NULL)
                         {
-                            //finding vptr and implementing it into the path
-                            vptr = qv.path[pathPosition]->adj[target].v;
-                            vptr->parent = qv.path[pathPosition];
-                            vptr->visited = true;
-                            vptr->distance = bestDistance;
-
-                            //If statement to check when finished
-                            if(vptr->name == endingCity)
-                                done = true;
-
-                            qv.path.push_back(vptr);    //Push the city back
-                            m = 0;
+                            correctPath.push_back(vptr);
+                            vptr = vptr->parent;
+                            k++;
                         }
-                         else if(m < qv.path.size())
-                            m++;
-                    }
-
-                    //Sets pointer to last index in path and loops while parent is not assigned
-                    vptr = qv.path[qv.path.size() - 1];
-                    while(vptr->parent != NULL)
-                    {
                         correctPath.push_back(vptr);
-                        vptr = vptr->parent;
-                        k++;
-                    }
-                    correctPath.push_back(vptr);
 
-                    cout << bestDistance;
-                    int p;
-                    for( p = correctPath.size() -1; p >= 0; p--)
-                    {
-                        cout << "," << correctPath[p]->name;
+                        cout << bestDistance;
+                        int p;
+                        for( p = correctPath.size() -1; p >= 0; p--)
+                        {
+                            cout << "," << correctPath[p]->name;
+                        }
+                        cout << endl;
+                        correctPath.clear();
+                        for(int i = 0; i < vertices.size(); i++)
+                        {
+                            vertices[i].distance = 0;
+                            vertices[i].visited = false;
+                        }
+                        //RESET correctPath - otherwise the previous results print as well
                     }
-                    cout << endl;
-                    correctPath.clear();
-                    for(int i = 0; i < vertices.size(); i++)
-                    {
-                        vertices[i].distance = 0;
-                        vertices[i].visited = false;
-                    }
-                    //RESET correctPath - otherwise the previous results print as well
+                    else
+                        cout << "No safe path between cities" << endl;
                 }
                 else
-                    cout << "No safe path between cities" << endl;
+                    cout << "Please identify the districts before checking the distances" << endl;
             }
             else
-                cout << "Please identify the districts before checking the distances" << endl;
+                cout << "Distance from city to itself is always 0" << endl;
 
         }
         else
