@@ -109,14 +109,29 @@ void Graph::addEdge(string v1, string v2, int weight)   //Function to traverse a
 
 void Graph::displayEdges()  //Display all edges of the graph
 {
-    for(int i = 0; i < vertices.size(); i++)
+    if(districtAssigned == true)
     {
-        for(int j = 0; j < vertices[i].adj.size(); j++)
+        for(int i = 0; i < vertices.size(); i++)
         {
-            cout<<vertices[i].adj[j].v->name<<"***";
+            for(int j = 0; j < vertices[i].adj.size(); j++)
+            {
+                cout<<vertices[i].adj[j].v->name<<"***";
+            }
+            cout << "->" << vertices[i].district << endl;
         }
-        cout<<endl;
     }
+    else
+    {
+        for(int i = 0; i < vertices.size(); i++)
+        {
+            for(int j = 0; j < vertices[i].adj.size(); j++)
+            {
+                cout<<vertices[i].adj[j].v->name<<"***";
+            }
+            cout<<endl;
+        }
+    }
+
 }
 
 
@@ -141,6 +156,7 @@ void Graph::assignDistricts()   //Assign districts to all vertices
             districtCounter++;  //Increment district counter to move on to the next one
         }
     }
+    districtAssigned = true;
 }
 
 void Graph::shortestPath(string startingCity,string endingCity) //BFS to determine shortest path(smallest number of edges) between two vertices

@@ -64,6 +64,7 @@ class Graph
         std::vector<vertex> vertices;
         std::vector<vertex *> correctPath;
         std::vector<vertex> tripvertices;
+        bool districtAssigned = false;
 };
 
 #endif // GRAPH_H
