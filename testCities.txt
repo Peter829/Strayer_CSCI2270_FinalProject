@@ -1,6 +1,0 @@
-cities,Boston,Chicago,Miami,San Diego,Seattle
-Boston,0,500,1000,8000,1500
-Chicago,500,0,1800,1900,800
-Miami,1000,1800,0,2000,1700
-San Diego,8000,1900,2000,0,900
-Seattle,1500,800,1700,900,0
