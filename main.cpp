@@ -57,9 +57,9 @@ int main(int argc, char* argv[])
 
         if(num == 1)    //PRINT VERTICES
             graphM.displayEdges();
-        if(num == 2)    //FIND DISTRICTS
+        else if(num == 2)    //FIND DISTRICTS
             graphM.assignDistricts();
-       if(num == 3)    //FIND SHORTEST PATH BETWEEN ANY TWO CITIES USING BFS
+       else if(num == 3)    //FIND SHORTEST PATH BETWEEN ANY TWO CITIES USING BFS
         {
             cout << "Don't forget to identify districts before using BFS algorithm" << endl;
             string city, city2;
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
             getline(cin, city2);
             graphM.shortestPath(city,city2);
         }
-        if (num == 4)  //FIND SHORTEST PATH BETWEEN ANY TWO CITIES USING DYKSTRA
+        else if (num == 4)  //FIND SHORTEST PATH BETWEEN ANY TWO CITIES USING DYKSTRA
         {
             cout << "Don't forget to identify districts before using Dykstra's algorithm" << endl;
             string city, city2;
@@ -79,10 +79,17 @@ int main(int argc, char* argv[])
             getline(cin, city2);
             graphM.shortestDistanceDykstra(city,city2);
         }
-        if (num == 5) //FIND SHORTEST DISTANCE BETWEEN all CITIES w/ FLOYD-WARSHALL
+        else if (num == 5) //FIND SHORTEST DISTANCE BETWEEN all CITIES w/ FLOYD-WARSHALL
                              //USE SAME GRAPH AS FOR MENU ITEMS 1-4
         {
             graphM.shortestDistanceFloydWarshall();
+        }
+        else{
+                if(num == 6)
+                {
+                    break;
+                }
+            cout << "Invalid option, please enter a number between 1 and 6." << endl;
         }
 }
     cout << "Goodbye!" << endl;
