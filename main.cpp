@@ -19,7 +19,8 @@ int main(int argc, char* argv[])
 
     //graphM.buildGraph();
 
-    int num, cot = 0, lineCount = 0;    //set up int counter for main menu choices
+    int  cot = 0, lineCount = 0;    //set up int counter for main menu choices
+    string num;
     string lineData, lineData2; //strings to read in text file info
     //bool oldgraph = true; //Boolean to choose which graph to run Floyd-Warshall on
 
@@ -38,11 +39,11 @@ int main(int argc, char* argv[])
         }
     }
     else
-        num = 6;    //end program if file does not open correctly
+        num = "6";    //end program if file does not open correctly
 
     inFile.close();
 
-    while(num != 6) //while user has not quit print menu
+    while(num != "6") //while user has not quit print menu
     {
         cout << "======Main Menu======" << endl;
         cout << "1. Print vertices" << endl;
@@ -52,14 +53,13 @@ int main(int argc, char* argv[])
         cout << "5. Find shortest distance between two cities using Floyd-Warshall" << endl;
         cout << "6. Quit" << endl;
 
-        cin >> num;
-        cin.ignore();   //NECCESSARY IF USING CIN>>  && GETLINE(CIN,STR)
+        getline(cin,num);
 
-        if(num == 1)    //PRINT VERTICES
+        if(num == "1")    //PRINT VERTICES
             graphM.displayEdges();
-        else if(num == 2)    //FIND DISTRICTS
+        else if(num == "2")    //FIND DISTRICTS
             graphM.assignDistricts();
-       else if(num == 3)    //FIND SHORTEST PATH BETWEEN ANY TWO CITIES USING BFS
+       else if(num == "3")    //FIND SHORTEST PATH BETWEEN ANY TWO CITIES USING BFS
         {
             cout << "Don't forget to identify districts before using BFS algorithm" << endl;
             string city, city2;
@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
             getline(cin, city2);
             graphM.shortestPath(city,city2);
         }
-        else if (num == 4)  //FIND SHORTEST PATH BETWEEN ANY TWO CITIES USING DYKSTRA
+        else if (num == "4")  //FIND SHORTEST PATH BETWEEN ANY TWO CITIES USING DYKSTRA
         {
             cout << "Don't forget to identify districts before using Dykstra's algorithm" << endl;
             string city, city2;
@@ -79,13 +79,13 @@ int main(int argc, char* argv[])
             getline(cin, city2);
             graphM.shortestDistanceDykstra(city,city2);
         }
-        else if (num == 5) //FIND SHORTEST DISTANCE BETWEEN all CITIES w/ FLOYD-WARSHALL
+        else if (num == "5") //FIND SHORTEST DISTANCE BETWEEN all CITIES w/ FLOYD-WARSHALL
                              //USE SAME GRAPH AS FOR MENU ITEMS 1-4
         {
             graphM.shortestDistanceFloydWarshall();
         }
         else{
-                if(num == 6)
+                if(num == "6")
                 {
                     break;
                 }
