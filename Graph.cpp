@@ -73,6 +73,7 @@ void Graph::addVertex(string n)
     {
         vertex v;
         v.name = n;
+
         v.distance = 0;
         v.district = -1;
         v.parent = NULL;
@@ -124,11 +125,16 @@ void Graph::displayEdges()  //Display all edges of the graph
     {
         for(int i = 0; i < vertices.size(); i++)
         {
-            for(int j = 0; j < vertices[i].adj.size(); j++)
+            int c=0;
+            for(int j = 0; j < vertices[i].adj.size()-1; j++)
             {
                 cout<<vertices[i].adj[j].v->name<<"***";
+                c++;
             }
-            cout<<endl;
+            if(c>0){
+                cout<<vertices[i].adj[c].v->name<<endl;
+            }
+            //cout<<endl;
         }
     }
 
@@ -421,5 +427,3 @@ void Graph::shortestDistanceFloydWarshall() //Uses shortest distance algorithm m
          }
      }
 }
-
-
